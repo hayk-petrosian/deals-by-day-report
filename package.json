@@ -1,0 +1,10 @@
+{
+  "name": "deals-by-day-report",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check app.js && node --check functions/_lib/auth.js && node --check functions/api/login.js && node --check functions/api/session.js && node --check functions/api/logout.js && node --check functions/api/report.js",
+    "test": "node --test"
+  }
+}
+
