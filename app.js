@@ -46,7 +46,10 @@
           const bar=document.createElement('div'); bar.className='bar'; bar.style.height=day.count?`${Math.max(1,day.count/top*100)}%`:'0';
           bar.setAttribute('role','img'); bar.setAttribute('aria-label',`${day.label}: ${day.count} сделок`);
           const value=document.createElement('span'); value.className='bar-value'; value.textContent=String(day.count); bar.append(value); wrap.append(bar);
-          const label=document.createElement('span'); label.className='day-label'; label.textContent=day.shortLabel; column.append(wrap,label); plot.append(column);
+          const label=document.createElement('span'); label.className='day-label'; label.setAttribute('aria-label',day.shortLabel); label.title=day.shortLabel;
+          const dateLabel=document.createElement('span'); dateLabel.className='day-label-date'; dateLabel.textContent=day.axisLabel||day.shortLabel;
+          const yearLabel=document.createElement('span'); yearLabel.className='day-label-year'; yearLabel.textContent=day.yearLabel||'';
+          label.append(dateLabel,yearLabel); column.append(wrap,label); plot.append(column);
         }
         totalOutput.textContent=String(days.reduce((sum,day)=>sum+day.count,0));
       }
@@ -80,7 +83,7 @@
           const days=[];
           for(let date=parseDate(from),end=parseDate(to);date<=end;date=nextDay(date)) {
             const key=dayKey(date); const label=new Intl.DateTimeFormat('ru-RU',{weekday:'short'}).format(date).replace('.','');
-            days.push({key,count:counts.get(key)||0,label,shortLabel:`${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()}`});
+            days.push({key,count:counts.get(key)||0,label,axisLabel:`${pad(date.getDate())}.${pad(date.getMonth()+1)}`,yearLabel:days.length===0||(date.getMonth()===0&&date.getDate()===1)?String(date.getFullYear()):'',shortLabel:`${pad(date.getDate())}.${pad(date.getMonth()+1)}.${date.getFullYear()}`});
           }
           renderChart(days);
           setStatus(`Отчёт готов: ${days[0].shortLabel} — ${days[days.length-1].shortLabel}.`);
