@@ -8,7 +8,7 @@ test('login protects report, accepts periods over seven days, and aggregates pag
   const env = {
     REPORT_PASSWORD: 'test-report-password-2026',
     SESSION_SECRET: 'test-session-signing-secret-at-least-32-characters',
-    BITRIX_WEBHOOK_URL: 'https://b24-ilhsgh.bitrix24.ru/rest/1/test-secret/'
+    BITRIX_WEBHOOK_URL: 'https://b24-ilhsgh.bitrix24.ru/rest/1/NOT_A_REAL_WEBHOOK_TOKEN/'
   };
   const origin = 'https://report.example';
   const baseHeaders = { Origin: origin, 'CF-Connecting-IP': '203.0.113.12' };
@@ -76,7 +76,7 @@ test('login protects report, accepts periods over seven days, and aggregates pag
       counts: { '2026-09-30': 1 }, pageCount: 1, total: 51, next: null
     });
     assert.equal(seen.length, 2);
-    assert.ok(seen.every(request => request.url === 'https://b24-ilhsgh.bitrix24.ru/rest/1/test-secret/crm.item.list'));
+    assert.ok(seen.every(request => request.url === 'https://b24-ilhsgh.bitrix24.ru/rest/1/NOT_A_REAL_WEBHOOK_TOKEN/crm.item.list'));
   } finally {
     globalThis.fetch = originalFetch;
   }
