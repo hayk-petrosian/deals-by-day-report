@@ -6,296 +6,97 @@
   <meta name="referrer" content="no-referrer">
   <meta name="color-scheme" content="light">
   <title>Новые сделки по дням</title>
-  <script src="https://api.bitrix24.com/api/v1/"></script>
   <style>
-    :root {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: #17233d;
-      background: #f3f6fb;
-      font-synthesis: none;
-      text-rendering: optimizeLegibility;
-      --muted: #78849a;
-      --line: #e8edf5;
-      --blue: #526cff;
-      --blue-dark: #3854e9;
-    }
+    :root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #17233d; background: #f3f6fb; font-synthesis: none; text-rendering: optimizeLegibility; --muted:#78849a; --line:#e8edf5; --blue:#526cff; --blue-dark:#3854e9; }
     * { box-sizing: border-box; }
     body { margin: 0; min-width: 320px; }
     button, input { font: inherit; }
     .page { max-width: 1120px; margin: 0 auto; padding: 48px 24px 64px; }
-    .eyebrow { margin: 0 0 10px; color: var(--blue); font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-    h1 { margin: 0; font-size: clamp(28px, 4vw, 38px); line-height: 1.12; letter-spacing: -.04em; }
-    .intro { margin: 12px 0 30px; color: var(--muted); font-size: 15px; }
-    .card { background: #fff; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 12px 40px #20345e0b; }
-    .controls { display: flex; align-items: end; flex-wrap: wrap; gap: 16px; padding: 22px; }
-    .field { display: grid; gap: 8px; min-width: 180px; }
-    label { color: #5c6880; font-size: 12px; font-weight: 700; }
-    input[type="date"] { height: 44px; border: 1px solid #dce3ef; border-radius: 10px; color: #17233d; background: white; padding: 0 12px; outline: none; }
-    input[type="date"]:focus { border-color: var(--blue); box-shadow: 0 0 0 3px #526cff1f; }
-    button { height: 44px; border: 0; border-radius: 10px; padding: 0 20px; color: #fff; background: var(--blue); font-weight: 750; cursor: pointer; transition: background .15s, transform .15s; }
-    button:hover:not(:disabled) { background: var(--blue-dark); transform: translateY(-1px); }
-    button:disabled { cursor: wait; opacity: .6; }
-    .limit { align-self: center; margin-left: auto; color: var(--muted); font-size: 12px; }
-    .status { margin: 18px 2px 0; min-height: 20px; color: var(--muted); font-size: 13px; }
-    .status.error { color: #c44545; }
-    .chart-card { margin-top: 18px; padding: 24px 26px 18px; }
-    .chart-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
-    .chart-head h2 { margin: 0; font-size: 16px; }
-    .total { color: var(--muted); font-size: 13px; }
-    .total strong { color: #17233d; font-size: 18px; margin-right: 4px; }
-    .plot { display: grid; grid-template-columns: 42px minmax(0, 1fr); height: 300px; }
-    .y-axis { display: flex; flex-direction: column; justify-content: space-between; align-items: end; padding: 0 9px 34px 0; color: #9aa5b8; font-size: 11px; }
-    .plot-area { position: relative; display: flex; align-items: stretch; justify-content: space-around; gap: 10px; padding: 0 8px 0 0; border-bottom: 1px solid var(--line); background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(25% - 1px), #edf1f7 calc(25% - 1px), #edf1f7 25%); }
-    .bar-column { z-index: 1; display: flex; min-width: 24px; flex: 1; flex-direction: column; justify-content: end; align-items: center; gap: 9px; }
-    .bar-wrap { display: flex; width: min(44px, 72%); height: calc(100% - 36px); justify-content: center; align-items: end; }
-    .bar { position: relative; width: 100%; min-height: 3px; border-radius: 9px 9px 2px 2px; background: linear-gradient(180deg, #7183ff, #526cff); transition: height .3s ease; }
-    .bar:hover { background: linear-gradient(180deg, #526cff, #354ee4); }
-    .bar-value { position: absolute; top: -23px; left: 50%; transform: translateX(-50%); color: #5d6880; font-size: 11px; font-weight: 750; white-space: nowrap; }
-    .day-label { height: 27px; color: #77839a; font-size: 11px; white-space: nowrap; }
-    .empty-state { position: absolute; inset: 0; display: grid; place-items: center; color: #9aa5b8; font-size: 13px; }
-    .footnote { margin: 14px 0 0; color: #97a1b3; font-size: 11px; text-align: right; }
-    .gate { display: none; margin-top: 20px; padding: 22px 24px; color: #5c6880; line-height: 1.55; }
-    .gate strong { display: block; margin-bottom: 6px; color: #17233d; font-size: 15px; }
-    .gate a { color: var(--blue-dark); }
-    @media (max-width: 640px) {
-      .page { padding: 32px 14px 40px; }
-      .controls { align-items: stretch; padding: 16px; }
-      .field { min-width: calc(50% - 8px); flex: 1; }
-      button { flex: 1 0 100%; }
-      .limit { width: 100%; margin: 0; }
-      .chart-card { overflow-x: auto; padding: 18px 14px 14px; }
-      .plot { min-width: 510px; }
-    }
+    .eyebrow { margin:0 0 10px; color:var(--blue); font-size:12px; font-weight:800; letter-spacing:.12em; text-transform:uppercase; }
+    h1 { margin:0; font-size:clamp(28px,4vw,38px); line-height:1.12; letter-spacing:-.04em; }
+    .intro { margin:12px 0 30px; color:var(--muted); font-size:15px; }
+    .card { background:#fff; border:1px solid var(--line); border-radius:20px; box-shadow:0 12px 40px #20345e0b; }
+    .auth-card { max-width:470px; margin:42px auto; padding:26px; }
+    .auth-card h2 { margin:0 0 8px; font-size:18px; }
+    .auth-card p { margin:0 0 20px; color:var(--muted); font-size:13px; line-height:1.55; }
+    .controls { display:flex; align-items:end; flex-wrap:wrap; gap:16px; padding:22px; }
+    .field { display:grid; gap:8px; min-width:180px; }
+    label { color:#5c6880; font-size:12px; font-weight:700; }
+    input { height:44px; width:100%; border:1px solid #dce3ef; border-radius:10px; color:#17233d; background:white; padding:0 12px; outline:none; }
+    input:focus { border-color:var(--blue); box-shadow:0 0 0 3px #526cff1f; }
+    button { height:44px; border:0; border-radius:10px; padding:0 20px; color:#fff; background:var(--blue); font-weight:750; cursor:pointer; transition:background .15s,transform .15s; }
+    button:hover:not(:disabled) { background:var(--blue-dark); transform:translateY(-1px); }
+    button:disabled { cursor:wait; opacity:.6; }
+    .quiet-button { color:#58657e; background:#eef1f8; }
+    .quiet-button:hover:not(:disabled) { color:#23304a; background:#e3e8f3; }
+    .auth-row { display:flex; gap:10px; }
+    .auth-row input { flex:1; }
+    .auth-row button { flex:0 0 auto; }
+    .limit { align-self:center; margin-left:auto; color:var(--muted); font-size:12px; }
+    .status { min-height:20px; margin:18px 2px 0; color:var(--muted); font-size:13px; }
+    .status.error { color:#c44545; }
+    .chart-card { margin-top:18px; padding:24px 26px 18px; }
+    .chart-head { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:24px; }
+    .chart-head h2 { margin:0; font-size:16px; }
+    .chart-actions { display:flex; align-items:center; gap:16px; }
+    .total { color:var(--muted); font-size:13px; white-space:nowrap; }
+    .total strong { margin-right:4px; color:#17233d; font-size:18px; }
+    .chart-scroll { overflow-x:auto; overscroll-behavior-x:contain; }
+    .plot { display:grid; grid-template-columns:42px minmax(0,1fr); height:320px; min-width:100%; }
+    .y-axis { display:flex; flex-direction:column; justify-content:space-between; align-items:end; padding:0 9px 35px 0; color:#9aa5b8; font-size:11px; }
+    .plot-area { position:relative; display:flex; align-items:stretch; justify-content:space-around; gap:10px; min-width:max-content; padding:0 12px 0 0; border-bottom:1px solid var(--line); background:repeating-linear-gradient(to bottom,transparent 0,transparent calc(25% - 1px),#edf1f7 calc(25% - 1px),#edf1f7 25%); }
+    .bar-column { z-index:1; display:flex; min-width:34px; flex:1; flex-direction:column; justify-content:end; align-items:center; gap:9px; }
+    .bar-wrap { display:flex; width:min(38px,72%); height:calc(100% - 36px); justify-content:center; align-items:end; }
+    .bar { position:relative; width:100%; min-height:3px; border-radius:8px 8px 2px 2px; background:linear-gradient(180deg,#7183ff,#526cff); transition:height .25s ease; }
+    .bar:hover { background:linear-gradient(180deg,#526cff,#354ee4); }
+    .bar-value { position:absolute; top:-22px; left:50%; transform:translateX(-50%); color:#5d6880; font-size:10px; font-weight:750; white-space:nowrap; }
+    .day-label { height:27px; color:#77839a; font-size:10px; white-space:nowrap; writing-mode:vertical-rl; transform:rotate(180deg); }
+    .empty-state { position:absolute; inset:0; display:grid; place-items:center; color:#9aa5b8; font-size:13px; }
+    .footnote { margin:14px 0 0; color:#97a1b3; font-size:11px; text-align:right; }
+    [hidden] { display:none !important; }
+    @media (max-width:640px) { .page{padding:32px 14px 40px}.controls{align-items:stretch;padding:16px}.field{min-width:calc(50% - 8px);flex:1}.limit{width:100%;margin:0}.chart-card{padding:18px 14px 14px}.plot{height:290px}.auth-card{margin-top:32px;padding:20px}.auth-row{flex-direction:column}.auth-row button{width:100%} }
   </style>
 </head>
 <body>
   <main class="page">
     <p class="eyebrow">Bitrix24 · CRM отчёт</p>
     <h1>Новые сделки по дням</h1>
-    <p class="intro">Выберите период и посмотрите, сколько сделок создано в каждый день.</p>
+    <p class="intro">Выберите любые даты и посмотрите, сколько сделок создано в каждый день.</p>
 
-    <section class="card controls" aria-label="Параметры отчёта">
-      <div class="field"><label for="date-from">Начало периода</label><input id="date-from" type="date"></div>
-      <div class="field"><label for="date-to">Конец периода</label><input id="date-to" type="date"></div>
-      <button id="load" type="button">Показать отчёт</button>
-      <span class="limit">Не более 7 дней включительно</span>
-    </section>
-    <p id="status" class="status" role="status" aria-live="polite">Ожидание подключения к Bitrix24…</p>
-
-    <section class="card chart-card" aria-label="Гистограмма сделок">
-      <div class="chart-head">
-        <h2>Создано сделок</h2>
-        <div class="total"><strong id="total">—</strong> за период</div>
-      </div>
-      <div class="plot">
-        <div id="y-axis" class="y-axis" aria-hidden="true"></div>
-        <div id="plot-area" class="plot-area"><div class="empty-state">Отчёт появится после подключения</div></div>
-      </div>
-      <p class="footnote">Учитывается дата создания по часовому поясу устройства.</p>
+    <section id="login-card" class="card auth-card" hidden>
+      <h2>Вход для руководителя</h2>
+      <p>Введите пароль доступа к отчёту. Данные сделок передаются только после входа и обрабатываются сервером.</p>
+      <form id="login-form">
+        <label for="password">Пароль</label>
+        <div class="auth-row" style="margin-top:8px">
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+          <button id="login-button" type="submit">Войти</button>
+        </div>
+      </form>
+      <p id="login-status" class="status" role="status" aria-live="polite"></p>
     </section>
 
-    <section id="gate" class="card gate">
-      <strong>Откройте отчёт через Bitrix24</strong>
-      Данные доступны только внутри установленного приложения Bitrix24 и подгружаются с учётом прав вошедшего сотрудника.
-      <br><a href="https://b24-ilhsgh.bitrix24.ru/" target="_blank" rel="noopener noreferrer">Перейти в Bitrix24</a>
+    <section id="report-app" hidden>
+      <section class="card controls" aria-label="Параметры отчёта">
+        <div class="field"><label for="date-from">Начало периода</label><input id="date-from" type="date" required></div>
+        <div class="field"><label for="date-to">Конец периода</label><input id="date-to" type="date" required></div>
+        <button id="load" type="button">Показать отчёт</button>
+        <span class="limit">Период без ограничения по числу дней</span>
+      </section>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <section class="card chart-card" aria-label="Гистограмма сделок">
+        <div class="chart-head">
+          <h2>Создано сделок</h2>
+          <div class="chart-actions"><div class="total"><strong id="total">—</strong> за период</div><button id="logout" class="quiet-button" type="button">Выйти</button></div>
+        </div>
+        <div class="chart-scroll"><div class="plot"><div id="y-axis" class="y-axis" aria-hidden="true"></div><div id="plot-area" class="plot-area"><div class="empty-state">Выберите период и нажмите «Показать отчёт»</div></div></div></div>
+        <p class="footnote">Группировка по дням в часовом поясе устройства. Показаны только итоги, без названий и контактов.</p>
+      </section>
     </section>
   </main>
 
-  <script>
-    (() => {
-      'use strict';
-
-      const fromInput = document.querySelector('#date-from');
-      const toInput = document.querySelector('#date-to');
-      const loadButton = document.querySelector('#load');
-      const status = document.querySelector('#status');
-      const totalOutput = document.querySelector('#total');
-      const plot = document.querySelector('#plot-area');
-      const yAxis = document.querySelector('#y-axis');
-      const gate = document.querySelector('#gate');
-      let bitrixReady = false;
-
-      const pad = value => String(value).padStart(2, '0');
-      const toDateInput = date => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
-      const parseLocalDate = value => {
-        const [year, month, day] = value.split('-').map(Number);
-        return new Date(year, month - 1, day);
-      };
-      const dayKey = date => toDateInput(date);
-      const nextDay = date => new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1);
-      const toBitrixDateTime = date => {
-        const offset = -date.getTimezoneOffset();
-        const sign = offset >= 0 ? '+' : '-';
-        const abs = Math.abs(offset);
-        return `${toDateInput(date)}T00:00:00${sign}${pad(Math.floor(abs / 60))}:${pad(abs % 60)}`;
-      };
-
-      function setStatus(message, error = false) {
-        status.textContent = message;
-        status.classList.toggle('error', error);
-      }
-
-      function setupDates() {
-        const today = new Date();
-        const start = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6);
-        fromInput.value = toDateInput(start);
-        toInput.value = toDateInput(today);
-        fromInput.max = toInput.value;
-        toInput.max = toInput.value;
-        updateDateLimits();
-      }
-
-      function updateDateLimits() {
-        const start = fromInput.value ? parseLocalDate(fromInput.value) : null;
-        const end = toInput.value ? parseLocalDate(toInput.value) : null;
-        if (start) toInput.min = dayKey(start);
-        if (end) {
-          const latestStart = new Date(end.getFullYear(), end.getMonth(), end.getDate() - 6);
-          fromInput.min = '';
-          fromInput.max = dayKey(end);
-          if (start && start < latestStart) fromInput.value = dayKey(latestStart);
-        }
-        if (start) {
-          const latestEnd = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 6);
-          toInput.max = dayKey(latestEnd) < toDateInput(new Date()) ? dayKey(latestEnd) : toDateInput(new Date());
-        }
-      }
-
-      function renderChart(days) {
-        const max = Math.max(1, ...days.map(item => item.count));
-        const scale = Math.ceil(max / 4) || 1;
-        const top = Math.ceil(max / scale) * scale;
-        yAxis.replaceChildren(...[top, Math.ceil(top * .75), Math.ceil(top * .5), Math.ceil(top * .25), 0].map(value => {
-          const tick = document.createElement('span');
-          tick.textContent = value;
-          return tick;
-        }));
-        plot.replaceChildren();
-        if (days.every(day => day.count === 0)) {
-          const empty = document.createElement('div');
-          empty.className = 'empty-state';
-          empty.textContent = 'За выбранный период сделок не создано';
-          plot.append(empty);
-        }
-        for (const day of days) {
-          const column = document.createElement('div');
-          column.className = 'bar-column';
-          const wrap = document.createElement('div');
-          wrap.className = 'bar-wrap';
-          const bar = document.createElement('div');
-          bar.className = 'bar';
-          bar.style.height = `${day.count ? Math.max(4, day.count / top * 100) : 0}%`;
-          bar.setAttribute('role', 'img');
-          bar.setAttribute('aria-label', `${day.label}: ${day.count} сделок`);
-          const value = document.createElement('span');
-          value.className = 'bar-value';
-          value.textContent = day.count;
-          bar.append(value);
-          wrap.append(bar);
-          const label = document.createElement('span');
-          label.className = 'day-label';
-          label.textContent = day.shortLabel;
-          column.append(wrap, label);
-          plot.append(column);
-        }
-        totalOutput.textContent = days.reduce((sum, day) => sum + day.count, 0);
-      }
-
-      function callBitrix(method, params) {
-        return new Promise((resolve, reject) => {
-          BX24.callMethod(method, params, result => {
-            if (result.error()) reject(new Error(result.error().error_description || result.error()));
-            else resolve(result);
-          });
-        });
-      }
-
-      async function loadReport() {
-        if (!bitrixReady) {
-          gate.style.display = 'block';
-          setStatus('Чтобы читать данные CRM, откройте эту страницу из приложения в Bitrix24.');
-          return;
-        }
-        const start = parseLocalDate(fromInput.value);
-        const end = parseLocalDate(toInput.value);
-        const span = Math.round((end - start) / 86400000) + 1;
-        if (!fromInput.value || !toInput.value || span < 1 || span > 7) {
-          setStatus('Выберите корректный период от 1 до 7 дней.', true);
-          return;
-        }
-
-        const days = [];
-        for (let date = start; date <= end; date = nextDay(date)) {
-          const label = new Intl.DateTimeFormat('ru-RU', { weekday: 'short' }).format(date).replace('.', '');
-          days.push({ key: dayKey(date), count: 0, label, shortLabel: `${pad(date.getDate())}.${pad(date.getMonth() + 1)}` });
-        }
-        const dayByKey = new Map(days.map(day => [day.key, day]));
-        const dailyRanges = {};
-        days.forEach((day, index) => {
-          const dayStart = parseLocalDate(day.key);
-          dailyRanges[index] = {
-            '>=createdTime': toBitrixDateTime(dayStart),
-            '<createdTime': toBitrixDateTime(nextDay(dayStart))
-          };
-        });
-
-        loadButton.disabled = true;
-        setStatus('Загружаю количество сделок…');
-        try {
-          let startAt = 0;
-          do {
-            const result = await callBitrix('crm.item.list', {
-              entityTypeId: 2,
-              select: ['createdTime'],
-              filter: { 0: { logic: 'OR', ...dailyRanges } },
-              start: startAt
-            });
-            const data = result.data();
-            for (const deal of (data.items || [])) {
-              if (!deal.createdTime) continue;
-              const key = dayKey(new Date(deal.createdTime));
-              const day = dayByKey.get(key);
-              if (day) day.count += 1;
-            }
-            if (result.more()) {
-              startAt = result.next();
-            } else {
-              break;
-            }
-          } while (true);
-
-          renderChart(days);
-          setStatus(`Отчёт обновлён: ${days[0].shortLabel} — ${days[days.length - 1].shortLabel}.`);
-        } catch (error) {
-          setStatus(`Bitrix24 не вернул данные: ${error.message || 'проверьте права приложения и доступ к CRM.'}`, true);
-        } finally {
-          loadButton.disabled = false;
-        }
-      }
-
-      setupDates();
-      fromInput.addEventListener('change', updateDateLimits);
-      toInput.addEventListener('change', updateDateLimits);
-      loadButton.addEventListener('click', loadReport);
-
-      if (window.BX24 && typeof BX24.init === 'function') {
-        BX24.init(() => {
-          bitrixReady = !!BX24.getAuth();
-          if (bitrixReady) {
-            gate.style.display = 'none';
-            setStatus('Подключено к Bitrix24. Данные запрашиваются от имени вошедшего пользователя.');
-            loadReport();
-          } else {
-            gate.style.display = 'block';
-            setStatus('Не удалось получить авторизацию Bitrix24.', true);
-          }
-        });
-      } else {
-        gate.style.display = 'block';
-        setStatus('Страница готова. Для загрузки данных откройте её внутри Bitrix24.');
-      }
-    })();
-  </script>
+  <script src="/app.js" defer></script>
 </body>
 </html>
+
 
